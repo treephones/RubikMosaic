@@ -2,13 +2,21 @@ import os
 import enum
 from PIL import Image
 
+class Color():
+    def __init__(self, name, rgb):
+        self.name = name
+        self.rgb = rgb
+
+    def __str__(self):
+        return f"{self.name} = {self.rgb}"
+
 class Colors(enum.Enum):
-    RED = (246, 0, 0)
-    ORANGE = (255, 156, 0)
-    YELLOW = (255, 255, 0)
-    GREEN = (0, 217, 0)
-    BLUE = (55, 55, 179)
-    WHITE = (255, 255, 255)
+    RED = Color("red", (246, 0, 0))
+    ORANGE = Color("orange", (255, 156, 0))
+    YELLOW = Color("yellow", (255, 255, 0))
+    GREEN = Color("green", (0, 217, 0))
+    BLUE = Color("blue", (55, 55, 179))
+    WHITE = Color("white", (255, 255, 255))
 
     @staticmethod
     def values():
@@ -37,7 +45,8 @@ def prepare_image(path, n_cubes):
     for x in range(width):
         for y in range(length):
             pixel, diffs = pixels[x, y], []
-            for color in Colors.values():
+            for color_obj in Colors.values():
+                color = color_obj.rgb
                 diff = (color,
                         abs(pixel[0] - color[0]) +
                         abs(pixel[1] - color[1]) +
@@ -49,12 +58,27 @@ def prepare_image(path, n_cubes):
             if loaded == 0.5:
                 print("Halfway Done!")
             pixels[x, y] = tuple(min(diffs, key=lambda pix: pix[1])[0])
+    def average_middle(middles):
+        r, g, b = 0, 0, 0
+        for middle in middles:
+            r += middle[0]
+            g += middle[1]
+            g += middle[2]
+        l = len(middles)
+        return (int(r/l), int(g/l), int(b/l))
+    middles = []
+    for i in range(2):
+        for x in range(0, width, 3):
+            for y in range(0, length, 3):
+                if i == 0:
+                    middles.append(pixels[x+1, y+1])
+                elif i == 1:
+                    pixels[x+1, y+1] = avg_color
+        avg_color = average_middle(middles)
     path = f"{os.getcwd()}\\statics\\newimage.png"
     img.save(path)
     print("Done.")
     return path
-
-
 
 if __name__ == "__main__":
     pass

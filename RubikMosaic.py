@@ -1,3 +1,3 @@
-from process import ImageParser
+from process.ImageParser import prepare_image, Colors, Color
 
-print(ImageParser.prepare_image("C:/Users/moezb/OneDrive/Desktop/Python Projects/RubikMosaic/statics/test.jpg", 50000))
+print(prepare_image("C:/Users/moezb/OneDrive/Desktop/Python Projects/RubikMosaic/statics/test.jpg", 5000))
