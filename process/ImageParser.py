@@ -22,7 +22,16 @@ class Colors(enum.Enum):
     def values():
         return list(map(lambda col: col.value, Colors))
 
+class CubeNumberEntryException(Exception):
+    def __init__(self, num):
+        self.num = num
+
+    def __str__(self):
+        return f"Must have at least 4 rubiks cubes! Only {self.num} were provided."
+
 def get_dimensions(l, w, r):
+    if r < 4:
+        raise CubeNumberEntryException(r)
     image_ratio = l / w
     rectangles = [(1, r)]
     for i in range(r):
