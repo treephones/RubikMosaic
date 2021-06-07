@@ -8,14 +8,18 @@ from process.CubeConstants import *
 from process.ImageParser import Colors
 
 class CubeController():
+
+    def __init__(self):
+        self.colors = list(map(lambda c: c.rgb, Colors.values()))
+
     def run(self):
         self.freeCubeWindow()
 
     def renderRubiksCube(self):
         glBegin(GL_QUADS)
-        for surface in SURFACES:
-            for i,vertex in enumerate(surface):
-                glColor3fv(Colors.values()[int((i/8)*6)].rgb)
+        for i, face in enumerate(FACES):
+            for vertex in face:
+                glColor3fv(self.colors[i])
                 glVertex3fv(VERTICES[vertex])
         glEnd()
         glBegin(GL_LINES)
@@ -28,8 +32,9 @@ class CubeController():
         pygame.init()
         window = (800, 600)
         pygame.display.set_mode(window, DOUBLEBUF|OPENGL)
-        pygame.display.set_caption("Rubiks Cube")
+        pygame.display.set_caption("Rubik's Cube")
 
+        glEnable(GL_DEPTH_TEST)
         gluPerspective(45, window[0]/window[1], 0.1, 50)
         glTranslatef(0.0, 0.0, -5)
 

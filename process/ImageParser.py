@@ -12,10 +12,10 @@ class Color():
 
 class Colors(enum.Enum):
     RED = Color("red", (246, 0, 0))
-    ORANGE = Color("orange", (255, 156, 0))
+    ORANGE = Color("orange", (1, 0.5, 0))
     YELLOW = Color("yellow", (255, 255, 0))
     GREEN = Color("green", (0, 217, 0))
-    BLUE = Color("blue", (55, 55, 179))
+    BLUE = Color("blue", (0, 0, 179))
     WHITE = Color("white", (255, 255, 255))
 
     @staticmethod
