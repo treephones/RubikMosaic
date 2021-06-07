@@ -1,5 +1,6 @@
 import os
 import enum
+import numpy as np
 from PIL import Image
 
 class Color():
@@ -88,6 +89,9 @@ def prepare_image(path, n_cubes):
     img.save(path)
     print("Done.")
     return path
+
+def image_as_subregions(pixels):
+    pass
 
 if __name__ == "__main__":
     pass
