@@ -43,7 +43,7 @@ class CubeController():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                    quit()
+                    #quit() - commented out when pygame run as secondary window
                 if event.type == pygame.KEYDOWN:
                     if event.key in (pygame.K_LEFT, pygame.K_a):
                         glTranslatef(-0.2,0,0)
