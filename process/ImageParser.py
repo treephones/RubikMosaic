@@ -13,7 +13,7 @@ class Color():
 
 class Colors(enum.Enum):
     RED = Color("red", (246, 0, 0))
-    ORANGE = Color("orange", (1, 0.5, 0))
+    ORANGE = Color("orange", (255, 165, 0))
     YELLOW = Color("yellow", (255, 255, 0))
     GREEN = Color("green", (0, 217, 0))
     BLUE = Color("blue", (0, 0, 179))
@@ -75,7 +75,15 @@ def prepare_image(path, n_cubes):
             g += middle[1]
             g += middle[2]
         l = len(middles)
-        return (int(r/l), int(g/l), int(b/l))
+        avg_color, diffs = (int(r/l), int(g/l), int(b/l)), []
+        for color in Colors.values():
+            diff = (color.rgb,
+                    abs(avg_color[0] - color.rgb[0]) +
+                    abs(avg_color[1] - color.rgb[1]) +
+                    abs(avg_color[2] - color.rgb[2])
+                    )
+            diffs.append(diff)
+        return tuple(min(diffs, key=lambda pix: pix[1])[0])
     middles = []
     for i in range(2):
         for x in range(0, width, 3):
@@ -88,10 +96,14 @@ def prepare_image(path, n_cubes):
     path = f"{os.getcwd()}\\statics\\newimage.png"
     img.save(path)
     print("Done.")
-    return path
+    return path, img
 
-def image_as_subregions(pixels):
-    pass
+def image_as_subregions(img):
+    pixels, subregions = np.array(img), []
+    for x in range(0, len(pixels), 3):
+        for y in range(0, len(pixels[0]), 3):
+            subregions.append(pixels[x:x+3, y:y+3])
+    return subregions
 
 if __name__ == "__main__":
     pass

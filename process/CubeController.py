@@ -10,7 +10,7 @@ from process.ImageParser import Colors
 class CubeController():
 
     def __init__(self):
-        self.colors = list(map(lambda c: c.rgb, Colors.values()))
+        self.colors = Colors.values()
 
     def run(self):
         self.freeCubeWindow()
@@ -19,7 +19,7 @@ class CubeController():
         glBegin(GL_QUADS)
         for i, face in enumerate(FACES):
             for vertex in face:
-                glColor3fv(self.colors[i])
+                glColor3fv(self.colors[i].rgb if self.colors[i].name != "orange" else (1, 0.5, 0))
                 glVertex3fv(VERTICES[vertex])
         glEnd()
         glBegin(GL_LINES)
