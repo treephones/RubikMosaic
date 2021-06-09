@@ -32,13 +32,14 @@ class MosaicWindow:
     def run(self):
         #tk.Label(self.view, text="Mosaic", font=("Helvetica", 20), fg="black").grid(row=0, column=0, pady=1)
         output_path, img, srd = ImageParser.prepare_image(self.path, self.nCubes)
-        subregions = ImageParser.image_as_subregions(img)
         resize_dimensions = tuple(map(int, (self.size[0] / srd[0], self.size[1] / srd[1])))
+        scale_factor = int(resize_dimensions[0] / 3)
+        subregions = ImageParser.image_as_subregions(img, scale_factor)
         panels = []
         for y in range(srd[0]):
             for x in range(srd[1]):
                 image = Image.fromarray(subregions[x*srd[1]+y])
-                image = image.resize(resize_dimensions)
+                image = image.resize(resize_dimensions, Image.NEAREST)
                 subregion_image = ImageTk.PhotoImage(image)
                 panel = tk.Label(self.view, image=subregion_image)
                 panel.image = subregion_image
