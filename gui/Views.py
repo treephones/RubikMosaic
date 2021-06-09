@@ -1,7 +1,10 @@
+import numpy as np
 import tkinter as tk
 import tkinter.filedialog
 from PIL import Image, ImageTk
+
 from process.CubeController import CubeController
+from process import ImageParser
 
 class ErrorWindow:
 
@@ -17,7 +20,32 @@ class ErrorWindow:
         tk.Label(self.view, text=self.message, font=("Helvetica", 10), fg="black").pack()
 
 class MosaicWindow:
-    pass
+
+    def __init__(self, nCubes, path):
+        self.nCubes = nCubes
+        self.path = path
+        self.view = tk.Toplevel()
+        self.view.title("Mosaic")
+        self.view.geometry("1000x800+1000+200")
+        self.size = (1000, 800)
+
+    def run(self):
+        #tk.Label(self.view, text="Mosaic", font=("Helvetica", 20), fg="black").grid(row=0, column=0, pady=1)
+        output_path, img, srd = ImageParser.prepare_image(self.path, self.nCubes)
+        subregions = ImageParser.image_as_subregions(img)
+        resize_dimensions = tuple(map(int, (self.size[0] / srd[0], self.size[1] / srd[1])))
+        panels = []
+        for y in range(srd[0]):
+            for x in range(srd[1]):
+                image = Image.fromarray(subregions[x*srd[1]+y])
+                image = image.resize(resize_dimensions)
+                subregion_image = ImageTk.PhotoImage(image)
+                panel = tk.Label(self.view, image=subregion_image)
+                panel.image = subregion_image
+                panel.grid(row=x+1, column=y+1, pady=(1,1), padx=(1,1))
+                panels.append(panel)
+
+        self.view.mainloop()
 
 class MosaicSetupWindow:
 
@@ -46,6 +74,13 @@ class MosaicSetupWindow:
     def displayImage(self):
         path = tk.filedialog.askopenfilename(title="Choose an image:", filetypes=[("image files", (".png", ".jpg", ".jpeg", ".jfif"))])
         self.path = path
+        # raw_img = Image.open(path)
+        # width, height = raw_img.size
+        # aspect_ratio = width/height
+        # nHeight = 2000
+        # nWidth = int(aspect_ratio * nHeight)
+        # raw_img = raw_img.resize((nWidth, nHeight))
+        # img = ImageTk.PhotoImage(master=self.view, image=raw_img)
         self.img_panel.destroy()
         self.img_panel = tk.Label(self.view, text=f"\nChosen Image:\n\n {path}", wraplength=500)
         self.img_panel.pack()
@@ -55,7 +90,7 @@ class MosaicSetupWindow:
             nCubes = int(entry.get())
             if self.path in [None, ""]:
                 raise AttributeError
-            imagePath = self.path
+            MosaicWindow(nCubes, self.path).run()
         except ValueError:
             ErrorWindow("Not a valid number!").run()
         except AttributeError:

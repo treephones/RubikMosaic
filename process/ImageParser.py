@@ -42,12 +42,13 @@ def get_dimensions(l, w, r):
             rectangles.append(((x, y), abs(image_ratio - (x/y))))
     rectangles.append((r, 1))
     closest = min(rectangles, key=lambda rectangle: rectangle[1])
-    return tuple([d*3 for d in closest[0]])
+    return tuple([d*3 for d in closest[0]]), closest[0]
 
 def prepare_image(path, n_cubes):
     img = Image.open(path)
     width, length = img.size
-    img = img.resize(get_dimensions(width, length, n_cubes)).convert("RGB")
+    new_dimensions, subregion_dimensions = get_dimensions(width, length, n_cubes)
+    img = img.resize(new_dimensions).convert("RGB")
     width, length = img.size
     pixel_num, counter = width*length, 0
     pixels = img.load()
@@ -93,10 +94,10 @@ def prepare_image(path, n_cubes):
                 elif i == 1:
                     pixels[x+1, y+1] = avg_color
         avg_color = average_middle(middles)
-    path = f"{os.getcwd()}\\statics\\newimage.png"
+    path = f"{os.getcwd()[:-3]}statics\\newimage.png"
     img.save(path)
     print("Done.")
-    return path, img
+    return path, img, subregion_dimensions
 
 def image_as_subregions(img):
     pixels, subregions = np.array(img), []
