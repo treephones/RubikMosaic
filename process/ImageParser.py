@@ -1,7 +1,6 @@
 import os
 import enum
 import numpy as np
-import scipy.ndimage
 from PIL import Image
 
 class Color():
@@ -100,11 +99,11 @@ def prepare_image(path, n_cubes):
     print("Done.")
     return path, img, subregion_dimensions
 
-def image_as_subregions(img, scale_factor):
+def image_as_subregions(img):
     pixels, subregions = np.array(img), []
     for x in range(0, len(pixels), 3):
         for y in range(0, len(pixels[0]), 3):
-            subregions.append(pixels[x:x + 3, y:y + 3])
+            subregions.append(pixels[x:x+3, y:y+3])
     return subregions
 
 
