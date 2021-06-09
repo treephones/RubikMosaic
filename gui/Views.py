@@ -37,7 +37,6 @@ class MosaicWindow:
         panels = []
         for y in range(srd[1]):
             for x in range(srd[0]):
-                #print(len(subregions),srd)
                 image = Image.fromarray(subregions[y*srd[0]+x])
                 image = image.resize(resize_dimensions, Image.NEAREST)
                 subregion_image = ImageTk.PhotoImage(image)
