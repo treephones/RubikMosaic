@@ -3,13 +3,31 @@ import tkinter.filedialog
 from PIL import Image, ImageTk
 from process.CubeController import CubeController
 
+class ErrorWindow:
+
+    def __init__(self, message):
+        self.message = message
+        self.view = tk.Tk()
+        self.view.title("Error")
+        self.view.geometry("250x150+1000+200")
+        self.size = (200, 200)
+
+    def run(self):
+        tk.Label(self.view, text="Something Went Wrong!", font=("Helvetica", 15), fg="red").pack(pady=(20,20))
+        tk.Label(self.view, text=self.message, font=("Helvetica", 10), fg="black").pack()
+
+class MosaicWindow:
+    pass
+
 class MosaicSetupWindow:
+
     def __init__(self):
         self.view = tk.Tk()
         self.view.title("Required Information")
-        self.view.geometry("500x300+20+20")
-        self.size = (500, 300)
+        self.view.geometry("500x400+1000+200")
+        self.size = (500, 400)
         self.img_panel = None
+        self.path = None
 
     def run(self):
         title = tk.Label(self.view, text="Required Information", font=("Helvetica", 15), fg="black")
@@ -18,23 +36,31 @@ class MosaicSetupWindow:
         nCubesLabel.pack()
         nCubes = tk.Entry(self.view)
         nCubes.pack()
-        chooseFileButton = tk.Button(self.view, text="Choose Image", height=2, width=20, command=lambda: self.displayImage())
+        chooseFileButton = tk.Button(self.view, text="Choose Image", height=1, width=15, command=lambda: self.displayImage())
         chooseFileButton.pack(pady=(20, 20))
+        continueButton = tk.Button(self.view, text="Continue", height=2, width=20, command=lambda: self.toImageView(nCubes))
+        continueButton.pack(pady=(20, 20))
         self.img_panel = tk.Label(self.view, text="", wraplength=500)
         self.view.mainloop()
 
     def displayImage(self):
         path = tk.filedialog.askopenfilename(title="Choose an image:", filetypes=[("image files", (".png", ".jpg", ".jpeg", ".jfif"))])
-        # raw_img = Image.open(path)
-        # width, height = raw_img.size
-        # aspect_ratio = width/height
-        # nHeight = 2000
-        # nWidth = int(aspect_ratio * nHeight)
-        # raw_img = raw_img.resize((nWidth, nHeight))
-        # img = ImageTk.PhotoImage(master=self.view, image=raw_img)
+        self.path = path
         self.img_panel.destroy()
         self.img_panel = tk.Label(self.view, text=f"\nChosen Image:\n\n {path}", wraplength=500)
         self.img_panel.pack()
+
+    def toImageView(self, entry):
+        try:
+            nCubes = int(entry.get())
+            if self.path in [None, ""]:
+                raise AttributeError
+            imagePath = self.path
+        except ValueError:
+            ErrorWindow("Not a valid number!").run()
+        except AttributeError:
+            ErrorWindow("No image selected!").run()
+
 
 class MainView:
 
