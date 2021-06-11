@@ -129,3 +129,4 @@ class MainView:
 if __name__ == "__main__":
     m = MainView()
     m.run()
+    #RubiksCubeController().run()

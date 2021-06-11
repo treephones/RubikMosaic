@@ -11,7 +11,7 @@ class RubiksCube:
     pass
 
 class CubePiece:
-    
+
     def __init__(self, x, y, z, layout):
         self.x = x
         self.y = y
