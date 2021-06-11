@@ -1,4 +1,3 @@
-import numpy as np
 import tkinter as tk
 import tkinter.filedialog
 from PIL import Image, ImageTk
