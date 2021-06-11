@@ -2,7 +2,7 @@ import tkinter as tk
 import tkinter.filedialog
 from PIL import Image, ImageTk
 
-from process.CubeController import CubeController
+from process.CubeController import RubiksCubeController
 from process import ImageParser
 
 class ErrorWindow:
@@ -103,7 +103,7 @@ class MainView:
         self.view.title("RubikMosaic")
         self.view.geometry("800x500+20+20")
         self.size = (800,500)
-        self.freeCube = CubeController()
+        self.freeCube = RubiksCubeController()
 
     def run(self):
         title = tk.Label(self.view, text="Welcome to RubikMosaic!", font=("Helvetica", 40), fg="black")

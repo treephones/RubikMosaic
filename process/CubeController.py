@@ -7,7 +7,18 @@ from OpenGL.GLU import *
 from process.CubeConstants import *
 from process.ImageParser import Colors
 
-class CubeController():
+class RubiksCube:
+    pass
+
+class CubePiece:
+    
+    def __init__(self, x, y, z, layout):
+        self.x = x
+        self.y = y
+        self.z = z
+        self.layout = layout
+
+class RubiksCubeController():
 
     def __init__(self):
         self.colors = Colors.values()
