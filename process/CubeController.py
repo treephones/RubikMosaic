@@ -38,7 +38,7 @@ class Cube():
         scaleT = [(p-(self.N-1)/2)*2.1*self.scale for p in self.current_i]
         return [*scaleA[0], 0, *scaleA[1], 0, *scaleA[2], 0, *scaleT, 1]
 
-    def draw(self, surf, animate, angle, axis, slice, dir):
+    def draw(self, col, surf, vert, animate, angle, axis, slice, dir):
 
         glPushMatrix()
         if animate and self.isAffected(axis, slice, dir):
@@ -135,10 +135,10 @@ class RubiksCube():
         glMatrixMode(GL_PROJECTION)
         gluPerspective(45, (display[0]/display[1]), 0.1, 50.0)
 
-        rubiks = RubiksCube(4, 1.5)
+        rubiks = RubiksCube(3, 2)
         rubiks.mainloop()
 
 if __name__ == '__main__':
-    RubiksCube().run()
+    RubiksCube(10,2).run()
     pygame.quit()
     quit()
