@@ -38,7 +38,7 @@ class Cube():
         scaleT = [(p-(self.N-1)/2)*2.1*self.scale for p in self.current_i]
         return [*scaleA[0], 0, *scaleA[1], 0, *scaleA[2], 0, *scaleT, 1]
 
-    def draw(self, surf, animate, angle, axis, slice, dir):
+    def draw(self, col, surf, vert, animate, angle, axis, slice, dir):
 
         glPushMatrix()
         if animate and self.isAffected(axis, slice, dir):
@@ -54,7 +54,7 @@ class Cube():
 
         glPopMatrix()
 
-class RubiksCube():
+class EntireCube():
     def __init__(self, N, scale):
         self.N = N
         cr = range(self.N)
@@ -62,8 +62,8 @@ class RubiksCube():
 
     def mainloop(self):
 
-        cube_map  = { K_UP: (-1, 0), K_DOWN: (1, 0), K_LEFT: (0, -1), K_RIGHT: (0, 1)}
-        slice_map = {
+        rot_cube_map  = { K_UP: (-1, 0), K_DOWN: (1, 0), K_LEFT: (0, -1), K_RIGHT: (0, 1)}
+        rot_slice_map = {
             K_1: (0, 0, 1), K_2: (0, 1, 1), K_3: (0, 2, 1), K_4: (1, 0, 1), K_5: (1, 1, 1),
             K_6: (1, 2, 1), K_7: (2, 0, 1), K_8: (2, 1, 1), K_9: (2, 2, 1),
             K_F1: (0, 0, -1), K_F2: (0, 1, -1), K_F3: (0, 2, -1), K_F4: (1, 0, -1), K_F5: (1, 1, -1),
@@ -80,12 +80,12 @@ class RubiksCube():
                     pygame.quit()
                     quit()
                 if event.type == KEYDOWN:
-                    if event.key in cube_map:
-                        rot_cube = cube_map[event.key]
-                    if not animate and event.key in slice_map:
-                        animate, action = True, slice_map[event.key]
+                    if event.key in rot_cube_map:
+                        rot_cube = rot_cube_map[event.key]
+                    if not animate and event.key in rot_slice_map:
+                        animate, action = True, rot_slice_map[event.key]
                 if event.type == KEYUP:
-                    if event.key in cube_map:
+                    if event.key in rot_cube_map:
                         rot_cube = (0, 0)
                 if event.type == pygame.KEYDOWN:
                     if event.key in (pygame.K_LEFT, pygame.K_a):
@@ -126,19 +126,20 @@ class RubiksCube():
             pygame.display.flip()
             pygame.time.wait(10)
 
-    def run(self):
-        pygame.init()
-        display = (800,600)
-        pygame.display.set_mode(display, DOUBLEBUF|OPENGL)
-        glEnable(GL_DEPTH_TEST)
+def main():
 
-        glMatrixMode(GL_PROJECTION)
-        gluPerspective(45, (display[0]/display[1]), 0.1, 50.0)
+    pygame.init()
+    display = (800,600)
+    pygame.display.set_mode(display, DOUBLEBUF|OPENGL)
+    glEnable(GL_DEPTH_TEST)
 
-        rubiks = RubiksCube(4, 1.5)
-        rubiks.mainloop()
+    glMatrixMode(GL_PROJECTION)
+    gluPerspective(45, (display[0]/display[1]), 0.1, 50.0)
+
+    NewEntireCube = EntireCube(3, 1.5)
+    NewEntireCube.mainloop()
 
 if __name__ == '__main__':
-    RubiksCube().run()
+    main()
     pygame.quit()
     quit()

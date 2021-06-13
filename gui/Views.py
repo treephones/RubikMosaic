@@ -2,7 +2,7 @@ import tkinter as tk
 import tkinter.filedialog
 from PIL import Image, ImageTk
 
-from process.CubeController import RubiksCubeController
+from process.CubeController import RubiksCubeController, RubiksCube, CubePiece
 from process import ImageParser
 
 class ErrorWindow:
@@ -127,6 +127,6 @@ class MainView:
             print("Closed Rubik's Cube Window.")
 
 if __name__ == "__main__":
-    m = MainView()
-    m.run()
-    #RubiksCubeController().run()
+    # m = MainView()
+    # m.run()
+    RubiksCubeController().run()
