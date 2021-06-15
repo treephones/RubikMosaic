@@ -1,3 +1,5 @@
+import time
+
 import pygame
 from pygame.locals import *
 
@@ -9,7 +11,7 @@ from process.ImageParser import Colors
 
 COLORS = [color.rgb if color.name != "orange" else (1, 0.5, 0) for color in Colors.values()]
 
-class Cube():
+class Cube:
     def __init__(self, id, N, scale):
         self.N = N
         self.scale = scale
@@ -54,14 +56,13 @@ class Cube():
 
         glPopMatrix()
 
-class RubiksCube():
+class RubiksCube:
     def __init__(self, N, scale):
         self.N = N
         cr = range(self.N)
         self.cubes = [Cube((x, y, z), self.N, scale) for x in cr for y in cr for z in cr]
 
     def mainloop(self):
-
         cube_map  = { K_UP: (-1, 0), K_DOWN: (1, 0), K_LEFT: (0, -1), K_RIGHT: (0, 1)}
         slice_map = {
             K_1: (0, 0, 1), K_2: (0, 1, 1), K_3: (0, 2, 1), K_4: (1, 0, 1), K_5: (1, 1, 1),
@@ -78,10 +79,12 @@ class RubiksCube():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                    quit()
+                    #quit()
                 if event.type == KEYDOWN:
                     if event.key in cube_map:
                         rot_cube = cube_map[event.key]
+                    if event.key == K_m:
+                        RubiksCubeController().test()
                     if not animate and event.key in slice_map:
                         animate, action = True, slice_map[event.key]
                 if event.type == KEYUP:
@@ -128,17 +131,22 @@ class RubiksCube():
 
     def run(self):
         pygame.init()
+        pygame.display.set_caption("Rubik's Cube")
         display = (800,600)
         pygame.display.set_mode(display, DOUBLEBUF|OPENGL)
         glEnable(GL_DEPTH_TEST)
-
         glMatrixMode(GL_PROJECTION)
         gluPerspective(45, (display[0]/display[1]), 0.1, 50.0)
-
-        rubiks = RubiksCube(3, 2)
+        rubiks = RubiksCube(3, 1.8)
         rubiks.mainloop()
 
+class RubiksCubeController:
+    def test(self):
+        keypress = pygame.event.Event(KEYDOWN, unicode="F1", key=K_F1, mod=KMOD_NONE)
+        for i in range(10):
+            pygame.event.post(keypress)
+
 if __name__ == '__main__':
-    RubiksCube(10,2).run()
+    RubiksCube(0,0).run()
     pygame.quit()
     quit()
