@@ -23,6 +23,13 @@ class Colors(enum.Enum):
     def values():
         return list(map(lambda col: col.value, Colors))
 
+    @staticmethod
+    def obj_from_rgb(rgb):
+        for color in Colors.values():
+            if color.rgb == rgb:
+                return color
+        return None
+
 class CubeNumberEntryException(Exception):
     def __init__(self, num):
         self.num = num

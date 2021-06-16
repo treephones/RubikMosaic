@@ -2,8 +2,16 @@ import tkinter as tk
 import tkinter.filedialog
 from PIL import Image, ImageTk
 
-from process.CubeController import RubiksCube, Cube
+from process.CubeController import RubiksCube
 from process import ImageParser
+
+class SubregionPanel:
+
+    def __init__(self, colors, label, instructions):
+        self.colors = colors
+        self.label = label
+        self.instructions = instructions
+
 
 class ErrorWindow:
 
@@ -18,6 +26,19 @@ class ErrorWindow:
         tk.Label(self.view, text="Something Went Wrong!", font=("Helvetica", 15), fg="red").pack(pady=(20,20))
         tk.Label(self.view, text=self.message, font=("Helvetica", 10), fg="black").pack()
 
+class InstructionsWindow:
+
+    def __init__(self, instructions):
+        self.instructions = instructions
+        self.view = tk.Toplevel()
+        self.view.title("Instructions and Visualization")
+        self.view.geometry("800x800+1000+200")
+        self.size = (1000, 800)
+
+    def run(self):
+        pass
+
+
 class MosaicWindow:
 
     def __init__(self, nCubes, path):
@@ -29,20 +50,31 @@ class MosaicWindow:
         self.size = (1000, 800)
 
     def run(self):
-        #tk.Label(self.view, text="Mosaic", font=("Helvetica", 20), fg="black").grid(row=0, column=0, pady=1)
         output_path, img, srd = ImageParser.prepare_image(self.path, self.nCubes)
         resize_dimensions = tuple(map(int, (self.size[0] / srd[0], self.size[1] / srd[1])))
         subregions = ImageParser.image_as_subregions(img)
         panels = []
         for y in range(srd[1]):
             for x in range(srd[0]):
-                image = Image.fromarray(subregions[y*srd[0]+x])
+                subregion = subregions[y*srd[0]+x]
+                subregion_as_list = []
+                for row in subregion:
+                    r = []
+                    for color in row:
+                        r.append(ImageParser.Colors.obj_from_rgb(tuple(color)))
+                    subregion_as_list.append(r)
+                image = Image.fromarray(subregion)
+                subregion = subregion_as_list
                 image = image.resize(resize_dimensions, Image.NEAREST)
                 subregion_image = ImageTk.PhotoImage(image)
                 panel = tk.Label(self.view, image=subregion_image)
                 panel.image = subregion_image
                 panel.grid(row=y+1, column=x+1, pady=(1,1), padx=(1,1))
-                panels.append(panel)
+                instructions = "*****" \
+                               "MAKE INSTRUCTIONS FUNCTION TAKE 'subregion' VARIABLE AND OUTPUT LIST OF " \
+                               "INSTRUCTIONS TO THIS 'instructions' VARIABLE." \
+                               "******"
+                panels.append(SubregionPanel(subregion, panel, instructions))
 
         self.view.mainloop()
 
