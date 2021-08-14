@@ -3,7 +3,7 @@ import tkinter.filedialog
 from PIL import Image, ImageTk
 
 from process.CubeController import RubiksCube
-from process import ImageParser
+from process import ImageParser, CubeAlgorithms
 
 class SubregionPanel:
 
@@ -11,7 +11,6 @@ class SubregionPanel:
         self.colors = colors
         self.label = label
         self.instructions = instructions
-
 
 class ErrorWindow:
 
@@ -70,10 +69,8 @@ class MosaicWindow:
                 panel = tk.Label(self.view, image=subregion_image)
                 panel.image = subregion_image
                 panel.grid(row=y+1, column=x+1, pady=(1,1), padx=(1,1))
-                instructions = "*****" \
-                               "MAKE INSTRUCTIONS FUNCTION TAKE 'subregion' VARIABLE AND OUTPUT LIST OF " \
-                               "INSTRUCTIONS TO THIS 'instructions' VARIABLE." \
-                               "******"
+                instructions = CubeAlgorithms.instructions(subregion)
+                print(instructions)
                 panels.append(SubregionPanel(subregion, panel, instructions))
 
         self.view.mainloop()

@@ -1,7 +1,3 @@
-#Cube Algorithms
-#Vic Tong
-#June 4th 2021
-
 #colours as numbers (temporary)
 white = 1
 yellow = 6
@@ -96,6 +92,7 @@ def instructions(output):
         orange: ["Q", "R", "S", "T"],
         yellow: ["U", "V", "W", "X"]
     }
+    ret = []
 
     difference_list = difference_in_lists(output)
 
@@ -106,22 +103,20 @@ def instructions(output):
             offset_label = offset(centerpiece, label) #returns the offsetted label if the centerpiece isn't red
             setup = edge_setup_move(offset_label) #returns the setup move to swap pieces
 
-
-            print(setup)
-            print(T_perm)
-            print(move_reverse(setup)) #setup move is now reversed
+            ret.extend(setup)
+            ret.extend(T_perm)
+            ret.extend(move_reverse(setup))
 
             label = cube_labels[centerpiece][difference_list[0].index(i)]
             offset_label = offset(centerpiece, label) #returns the offsetted label if the centerpiece isn't red
             setup = edge_setup_move(offset_label) #returns the setup move to swap pieces
 
+            ret.extend(setup)
+            ret.extend(T_perm)
+            ret.extend(move_reverse(setup))
 
-            print(setup)
-            print(T_perm)
-            print(move_reverse(setup)) #setup move is now reversed
 
-
-            cube_labels[centerpiece].pop(0)#deletes the current label from the dictionary so it doesn't get reused
+    cube_labels[centerpiece].pop(0)#deletes the current label from the dictionary so it doesn't get reused
 
 
     cube_labels = {
@@ -142,21 +137,21 @@ def instructions(output):
             setup = corner_setup_move(offset_label)  # returns the setup move to swap pieces
             #print("corner piece")
 
-            print(setup)
-            print(Y_perm)
-            print(move_reverse(setup))  # setup move is now reversed
-
+            ret.extend(setup)
+            ret.extend(Y_perm)
+            ret.extend(move_reverse(setup))
 
             label = cube_labels[centerpiece][difference_list[1].index(i)]
             offset_label = offset(centerpiece, label)  # returns the offsetted label if the centerpiece isn't red
             setup = corner_setup_move(offset_label)  # returns the setup move to swap pieces
 
-            print(setup)
-            print(Y_perm)
-            print(move_reverse(setup)) #setup move is now reversed
+            ret.extend(setup)
+            ret.extend(Y_perm)
+            ret.extend(move_reverse(setup))
 
+        cube_labels[centerpiece].pop(0)#deletes the current label from the dictionary so it doesn't get reused
 
-            cube_labels[centerpiece].pop(0)#deletes the current label from the dictionary so it doesn't get reused
+    return ret
 
 
 def edge_setup_move(piece):
@@ -245,11 +240,6 @@ def corner_setup_move(piece):
     elif piece == "X":
         return ["D", "F'"]
 
-
-
-
-
-
 def offset(centerpiece, label):
     if centerpiece == white:
         return chr(ord(label)-8)
@@ -263,5 +253,3 @@ def offset(centerpiece, label):
         return (chr(ord(label) + 8))
     elif centerpiece == yellow:
         return (chr(ord(label) + 12))
-
-instructions(output)
